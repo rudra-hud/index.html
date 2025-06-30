@@ -1,0 +1,349 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>🧠 QuizSolver App</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600&family=Poppins:wght@400;600&family=Rubik:wght@400;600&display=swap" rel="stylesheet">
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      font-family: 'Poppins', 'Inter', 'Rubik', sans-serif;
+      margin: 0;
+      background: #f5f5f5;
+      color: #222;
+      transition: background 0.3s, color 0.3s;
+    }
+    .dark {
+      background: #121212;
+      color: #e2e2e2;
+    }
+    header {
+      background: #5f4dee;
+      color: white;
+      padding: 20px;
+      position: relative;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .dark header {
+      background: #2c2c7a;
+    }
+    #menuBtn {
+      position: absolute;
+      left: 20px;
+      top: 20px;
+      font-size: 24px;
+      cursor: pointer;
+      background: transparent;
+      border: none;
+      color: white;
+    }
+    #toggleDark {
+      position: absolute;
+      right: 20px;
+      top: 20px;
+      background: #fff;
+      color: #333;
+      padding: 6px 12px;
+      border-radius: 20px;
+      cursor: pointer;
+      font-weight: bold;
+    }
+    .dark #toggleDark {
+      background: #444;
+      color: white;
+    }
+    #menuDropdown {
+      position: absolute;
+      top: 60px;
+      left: 20px;
+      background: white;
+      color: black;
+      border-radius: 6px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.2);
+      display: none;
+      z-index: 999;
+    }
+    .dark #menuDropdown {
+      background: #1e1e1e;
+      color: white;
+    }
+    #menuDropdown a {
+      display: block;
+      padding: 10px 20px;
+      text-decoration: none;
+      color: inherit;
+    }
+    #menuDropdown a:hover {
+      background: #eee;
+    }
+    .dark #menuDropdown a:hover {
+      background: #333;
+    }
+    main {
+      max-width: 800px;
+      margin: auto;
+      padding: 30px;
+    }
+    select, input, button {
+      padding: 10px;
+      margin: 5px;
+      border-radius: 6px;
+      border: 1px solid #ccc;
+      font-size: 16px;
+      max-width: 100%;
+      transition: transform 0.2s ease, background 0.3s ease;
+    }
+    .btn {
+      background: #5f4dee;
+      color: white;
+      border: none;
+      cursor: pointer;
+    }
+    .btn:hover {
+      background: #4b3cc7;
+      transform: scale(1.05);
+    }
+    .controls {
+      text-align: center;
+      flex-wrap: wrap;
+    }
+    #output-box {
+      background: white;
+      padding: 40px;
+      border-radius: 10px;
+      box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+      margin-top: 30px;
+      position: relative;
+      white-space: pre-wrap;
+      font-size: 18px;
+      line-height: 1.6;
+      overflow-x: auto;
+    }
+    .dark #output-box {
+      background: #1e1e1e;
+      box-shadow: 0 0 10px rgba(255,255,255,0.1);
+    }
+    .output-buttons {
+      position: absolute;
+      top: 10px;
+      right: 10px;
+    }
+    .output-buttons button {
+      margin-left: 5px;
+      font-size: 14px;
+      padding: 6px 10px;
+      transition: transform 0.2s ease;
+    }
+    .output-buttons button:hover {
+      transform: scale(1.05);
+    }
+    @media (max-width: 600px) {
+      main {
+        padding: 15px;
+      }
+      #output-box {
+        padding: 20px;
+      }
+      .output-buttons {
+        top: 5px;
+        right: 5px;
+      }
+      .output-buttons button {
+        font-size: 12px;
+        padding: 4px 8px;
+      }
+    }
+    #modal {
+      display: none;
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      background: rgba(0, 0, 0, 0.6);
+      justify-content: center;
+      align-items: center;
+      z-index: 9999;
+    }
+    #modalContent {
+      background: white;
+      padding: 30px;
+      max-width: 90%;
+      border-radius: 10px;
+      color: #333;
+    }
+    .dark #modalContent {
+      background: #2a2a2a;
+      color: white;
+    }
+
+    /* Loader styles */
+    .loader {
+      border: 6px solid #f3f3f3;
+      border-top: 6px solid #5f4dee;
+      border-radius: 50%;
+      width: 60px;
+      height: 60px;
+      animation: spin 1s linear infinite;
+      margin: 0 auto 10px;
+    }
+    @keyframes spin {
+      0% { transform: rotate(0deg); }
+      100% { transform: rotate(360deg); }
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <button id="menuBtn">⋮</button>
+    <h1 style="margin: 0;">🧠 QuizSolver App</h1>
+    <div id="toggleDark">🌙 Dark</div>
+    <div id="menuDropdown">
+      <a href="#" onclick="showAbout()">ℹ️ About Us</a>
+      <a href="#" onclick="showPolicy()">📃 Privacy Policy</a>
+      <a href="#" onclick="showHistory()">🕒 History</a>
+    </div>
+  </header>
+  <main>
+    <div class="controls">
+      <select id="type">
+        <option value="quiz">📝 Quiz</option>
+        <option value="notes">📖 Notes</option>
+        <option value="assignment">📚 Assignment</option>
+      </select>
+      <input type="text" id="topic" placeholder="Enter topic (e.g., Blockchain)" size="40"/>
+      <span id="quizOptions">
+        <select id="difficulty">
+          <option value="easy">Easy</option>
+          <option value="medium">Medium</option>
+          <option value="hard">Hard</option>
+        </select>
+        <input type="number" id="count" value="5" min="1" max="20"/>
+      </span><br/>
+      <button class="btn" onclick="generate()">🚀 Generate</button>
+    </div>
+    <div id="output-box">
+      <div class="output-buttons">
+        <button class="btn" onclick="copyText()">📋 Copy</button>
+        <button class="btn" onclick="downloadPDF()">⬇️ PDF</button>
+      </div>
+      <div id="output-content">
+        <p><em>AI output will appear here...</em></p>
+      </div>
+    </div>
+  </main>
+  <div id="modal">
+    <div id="modalContent">
+      <h2 id="modalTitle">Info</h2>
+      <div id="modalBody"></div>
+      <button class="btn" onclick="closeModal()">Close</button>
+    </div>
+  </div>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+  <script>
+    const API_KEY = "AIzaSyC-89UCdA2WQCZc3R_-eQcK9rht1S8tjUg";
+    const ENDPOINT = `https://generativelanguage.googleapis.com/v1beta/models/gemini-2.0-flash:generateContent?key=${API_KEY}`;
+    const typeSelect = document.getElementById("type");
+    const outputContent = document.getElementById("output-content");
+
+    typeSelect.addEventListener("change", () => {
+      document.getElementById("quizOptions").style.display = typeSelect.value === "quiz" ? "inline" : "none";
+    });
+
+    function showModal(title, message) {
+      document.getElementById("modal").style.display = "flex";
+      document.getElementById("modalTitle").innerText = title;
+      document.getElementById("modalBody").innerText = message;
+    }
+
+    function closeModal() {
+      document.getElementById("modal").style.display = "none";
+    }
+
+    async function generate() {
+      const type = typeSelect.value;
+      const topic = document.getElementById("topic").value.trim();
+      const difficulty = document.getElementById("difficulty").value;
+      const count = document.getElementById("count").value;
+
+      if (!topic) return showModal("Topic Required", "Please enter a topic before generating.");
+
+      let prompt = "";
+      if (type === "quiz") {
+        prompt = `Generate ${count} multiple choice questions on "${topic}" with answers. Difficulty: ${difficulty}`;
+      } else if (type === "notes") {
+        prompt = `Write detailed notes on "${topic}" in bullet points.`;
+      } else {
+        prompt = `Create a student assignment on "${topic}" with instructions and 5+ questions.`;
+      }
+
+      outputContent.innerHTML = `<div style="text-align:center">
+        <div class="loader"></div>
+        <p>Generating...</p>
+      </div>`;
+
+      try {
+        const res = await fetch(ENDPOINT, {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ contents: [{ parts: [{ text: prompt }] }] })
+        });
+        const data = await res.json();
+        const text = data.candidates?.[0]?.content?.parts?.[0]?.text;
+        outputContent.innerHTML = `<p>${(text || "❌ No result").replace(/\n/g, "</p><p>")}</p>`;
+        saveToHistory(prompt, text);
+      } catch (err) {
+        outputContent.innerHTML = `<p>❌ Error: ${err.message}</p>`;
+      }
+    }
+
+    function copyText() {
+      const text = outputContent.innerText;
+      navigator.clipboard.writeText(text).then(() => showModal("Copied", "Text has been copied to clipboard."));
+    }
+
+    async function downloadPDF() {
+      const { jsPDF } = window.jspdf;
+      const doc = new jsPDF();
+      const text = outputContent.innerText;
+      const lines = doc.splitTextToSize(text, 180);
+      doc.text(lines, 10, 10);
+      doc.save("ai_output.pdf");
+    }
+
+    function toggleDark() {
+      document.body.classList.toggle("dark");
+    }
+
+    function showPolicy() {
+      showModal("QuizSolver does not collect or store any personal data; all activity runs securely and privately in your browser.");
+    }
+
+    function showAbout() {
+      showModal("QuizSolver App is an AI-powered tool that helps students generate quizzes, notes, and assignments instantly using Google's Gemini AI. 👨‍💻 Built with ❤️ by students, for students.");
+    }
+
+    function saveToHistory(prompt, result) {
+      const history = JSON.parse(localStorage.getItem("ai-history") || "[]");
+      history.unshift({ prompt, result, time: new Date().toLocaleString() });
+      localStorage.setItem("ai-history", JSON.stringify(history.slice(0, 10)));
+    }
+
+    function showHistory() {
+      const history = JSON.parse(localStorage.getItem("ai-history") || "[]");
+      if (!history.length) return showModal("History", "No history found.");
+      let msg = "";
+      history.forEach((item) => {
+        msg += `🕒 [${item.time}]\nPrompt: ${item.prompt}\n---\n${item.result.slice(0, 300)}...\n\n`;
+      });
+      showModal("Recent History", msg);
+    }
+
+    document.getElementById("menuBtn").onclick = () => {
+      const menu = document.getElementById("menuDropdown");
+      menu.style.display = menu.style.display === "block" ? "none" : "block";
+    };
+    document.getElementById("toggleDark").onclick = toggleDark;
+  </script>
+</body>
+</html>
