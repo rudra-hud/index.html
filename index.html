@@ -177,7 +177,6 @@
       color: white;
     }
 
-    /* Loader styles */
     .loader {
       border: 6px solid #f3f3f3;
       border-top: 6px solid #5f4dee;
@@ -230,6 +229,19 @@
       <div id="output-content">
         <p><em>AI output will appear here...</em></p>
       </div>
+      <!-- 🔻 Adsterra Ad (300x250) Integration -->
+      <div style="margin-top: 30px; text-align: center;">
+        <script type="text/javascript">
+          atOptions = {
+            'key': '2514abb339d5ff778e1bec7b99497566',
+            'format': 'iframe',
+            'height': 250,
+            'width': 300,
+            'params': {}
+          };
+          document.write('<scr' + 'ipt type="text/javascript" src="https://www.profitabledisplaynetwork.com/2514abb339d5ff778e1bec7b99497566/invoke.js"></scr' + 'ipt>');
+        </script>
+      </div>
     </div>
   </main>
   <div id="modal">
@@ -277,10 +289,7 @@
         prompt = `Create a student assignment on "${topic}" with instructions and 5+ questions.`;
       }
 
-      outputContent.innerHTML = `<div style="text-align:center">
-        <div class="loader"></div>
-        <p>Generating...</p>
-      </div>`;
+      outputContent.innerHTML = `<div style="text-align:center"><div class="loader"></div><p>Generating...</p></div>`;
 
       try {
         const res = await fetch(ENDPOINT, {
@@ -316,11 +325,11 @@
     }
 
     function showPolicy() {
-      showModal("QuizSolver does not collect or store any personal data; all activity runs securely and privately in your browser.");
+      showModal("Privacy Policy", "QuizSolver does not collect or store any personal data; all activity runs securely and privately in your browser.");
     }
 
     function showAbout() {
-      showModal("QuizSolver App is an AI-powered tool that helps students generate quizzes, notes, and assignments instantly using Google's Gemini AI. 👨‍💻 Built with ❤️ by students, for students.");
+      showModal("About Us", "QuizSolver App is an AI-powered tool that helps students generate quizzes, notes, and assignments instantly using Google's Gemini AI. 👨‍💻 Built with ❤️ by students, for students.");
     }
 
     function saveToHistory(prompt, result) {
@@ -345,15 +354,5 @@
     };
     document.getElementById("toggleDark").onclick = toggleDark;
   </script>
-  <script type="text/javascript">
-	atOptions = {
-		'key' : 'bdd9241d21f21b57e62b2b9b9f5ce15f',
-		'format' : 'iframe',
-		'height' : 300,
-		'width' : 160,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/bdd9241d21f21b57e62b2b9b9f5ce15f/invoke.js"></script>
 </body>
 </html>
